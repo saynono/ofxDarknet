@@ -34,7 +34,6 @@
 #include "shortcut_layer.h"
 #include "cuda.h"
 #include "utils.h"
-#include "nightmare.h"
 #include "rnn.h"
 
 #include "ofxOpenCv.h"
@@ -79,7 +78,7 @@ public:
     std::vector< classification > classify( ofPixels & pix, int count = 5 );
     std::vector< detected_object > yolo( ofPixels & pix, float threshold = 0.24f, float maxOverlap = 0.5f );
     std::vector< activations > getFeatureMaps(int idxLayer);
-    //float * get_network_output_layer_gpu(int i);
+    float * get_network_output_layer_gpu( const network& net, int i);
 
     ofImage nightmare( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh );
     std::string rnn( int num, std::string seed, float temp );
@@ -92,7 +91,7 @@ protected:
     image convert( ofPixels & pix );
     ofPixels convert( image & image );
     
-	list1 *options1;
+	// list1 *options1;
 	char **names;
     vector<string> layerNames;
 	network net;

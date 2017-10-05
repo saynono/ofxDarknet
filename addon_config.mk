@@ -81,12 +81,12 @@ vs:
 	ADDON_INCLUDES += libs/3rdparty/include
 
 linux64:
-	ADDON_LDFLAGS += /home/gene/of_v0.9.8_linux64_release/addons/ofxDarknet/libs/darknet/lib/linux64/libdarknetLinux.so
-	ADDON_LIBS += /home/gene/of_v0.9.8_linux64_release/addons/ofxDarknet/libs/darknet/lib/linux64/libdarknetLinux.so
+	ADDON_LIBS += libs/darknet/lib/linux64/libdarknetLinux.so
 	ADDON_INCLUDES += /usr/local/cuda/include
 	ADDON_SOURCES_EXCLUDE = libs/3rdparty/include/pthread.h
 	ADDON_SOURCES_EXCLUDE += libs/3rdparty/include/sched.h
 	ADDON_SOURCES_EXCLUDE += libs/3rdparty/include/semaphore.h
 	ADDON_SOURCES_EXCLUDE += libs/cuda/include/cudnn.h
 	ADDON_SOURCES_EXCLUDE += libs/darknet/cMake/%
+	ADDON_LDFLAGS += -L/usr/local/cuda/lib64 -lcuda -lcudart -lcudnn -lcublas -lcurand -lcusolver
 

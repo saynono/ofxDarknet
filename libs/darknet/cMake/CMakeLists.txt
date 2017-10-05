@@ -71,8 +71,8 @@ endif()
 
 
 # -------- LIBRARY CREATION ---------
-set( LIB_TYPE "SHARED" )
-#set( LIB_TYPE "STATIC" )
+# set( LIB_TYPE "SHARED" )
+set( LIB_TYPE "STATIC" )
 
 
 

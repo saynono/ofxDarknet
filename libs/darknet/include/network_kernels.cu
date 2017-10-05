@@ -1,39 +1,42 @@
-#include "cuda_runtime.h"
-#include "curand.h"
-#include "cublas_v2.h"
 
 
-#include <stdio.h>
-#include <time.h>
-#include <assert.h>
+#include "network_kernels.h"
 
-#include "network.h"
-#include "image.h"
-#include "data.h"
-#include "utils.h"
-#include "parser.h"
+// #include "cuda_runtime.h"
+// #include "curand.h"
+// #include "cublas_v2.h"
 
-#include "crop_layer.h"
-#include "connected_layer.h"
-#include "rnn_layer.h"
-#include "gru_layer.h"
-#include "crnn_layer.h"
-#include "detection_layer.h"
-#include "region_layer.h"
-#include "convolutional_layer.h"
-#include "activation_layer.h"
-#include "maxpool_layer.h"
-#include "reorg_layer.h"
-#include "avgpool_layer.h"
-#include "normalization_layer.h"
-#include "batchnorm_layer.h"
-#include "cost_layer.h"
-#include "local_layer.h"
-#include "softmax_layer.h"
-#include "dropout_layer.h"
-#include "route_layer.h"
-#include "shortcut_layer.h"
-#include "blas.h"
+
+// #include <stdio.h>
+// #include <time.h>
+// #include <assert.h>
+// #include "network.h"
+// #include "image.h"
+// #include "data.h"
+// #include "utils.h"
+// #include "parser.h"
+
+// #include "crop_layer.h"
+// #include "connected_layer.h"
+// #include "rnn_layer.h"
+// #include "gru_layer.h"
+// #include "crnn_layer.h"
+// #include "detection_layer.h"
+// #include "region_layer.h"
+// #include "convolutional_layer.h"
+// #include "activation_layer.h"
+// #include "maxpool_layer.h"
+// #include "reorg_layer.h"
+// #include "avgpool_layer.h"
+// #include "normalization_layer.h"
+// #include "batchnorm_layer.h"
+// #include "cost_layer.h"
+// #include "local_layer.h"
+// #include "softmax_layer.h"
+// #include "dropout_layer.h"
+// #include "route_layer.h"
+// #include "shortcut_layer.h"
+// #include "blas.h"
 
 
 float * get_network_output_layer_gpu(network net, int i);
@@ -124,11 +127,11 @@ float train_network_datum_gpu(network net, float *x, float *y)
     return error;
 }
 
-typedef struct {
-    network net;
-    data1 d;
-    float *err;
-} train_args;
+// typedef struct {
+//     network net;
+//     data1 d;
+//     float *err;
+// } train_args;
 
 void *train_thread(void *ptr)
 {
@@ -299,11 +302,11 @@ void sync_layer(network *nets, int n, int j)
     //printf("Done syncing layer %d\n", j);
 }
 
-typedef struct{
-    network *nets;
-    int n;
-    int j;
-} sync_args;
+// typedef struct{
+//     network *nets;
+//     int n;
+//     int j;
+// } sync_args;
 
 void *sync_layer_thread(void *ptr)
 {

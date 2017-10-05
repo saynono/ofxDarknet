@@ -2,15 +2,26 @@
 
 void ofApp::setup() 
 {
-	std::string cfgfile = ofToDataPath( "cfg/darknet.cfg" );
-	std::string weightfile = ofToDataPath( "darknet.weights" );
-	std::string nameslist = ofToDataPath( "cfg/imagenet.shortnames.list" );
+//	std::string cfgfile = ofToDataPath( "cfg/darknet.cfg" );
+//	std::string weightfile = ofToDataPath( "darknet.weights" );
+//	std::string nameslist = ofToDataPath( "cfg/imagenet.shortnames.list" );
+
+    std::string cfgfile = ofToDataPath( "cfg/tiny-yolo.cfg" );
+    std::string weightfile = ofToDataPath( "tiny-yolo.weights" );
+    std::string nameslist = ofToDataPath( "cfg/9k.names" );
 
     darknet.init( cfgfile, weightfile, nameslist );
 
 	video.setDeviceID( 0 );
 	video.setDesiredFrameRate( 30 );
 	video.initGrabber( 640, 480 );
+
+	layer l;
+	network_state state;
+	network net;
+	// backward_activation_layer_gpu(l, state);
+	// forward_network_gpu(net, state);
+
 }
 
 void ofApp::update()

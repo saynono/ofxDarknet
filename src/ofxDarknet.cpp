@@ -60,13 +60,13 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
 	delete counts;
     loaded = true;
 }
-/*
-float * ofxDarknet::get_network_output_layer_gpu(int i)
+
+float * ofxDarknet::get_network_output_layer_gpu( const network& net, int i)
 {
     layer l = net.layers[i];
     if(l.type != REGION) cuda_pull_array(l.output_gpu, l.output, l.outputs*l.batch);
     return l.output;
-}*/
+}
 
 std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold /*= 0.24f */, float maxOverlap /*= 0.5f */ )
 {
@@ -182,7 +182,7 @@ ofImage ofxDarknet::nightmare( ofPixels & pix, int max_layer, int range, int nor
 			fflush( stderr );
 			int layer = max_layer + rand() % range - range / 2;
 			int octave = rand() % octaves;
-			optimize_picture( &net, im, layer, 1 / pow( 1.33333333, octave ), rate, thresh, norm );
+			// optimize_picture( &net, im, layer, 1 / pow( 1.33333333, octave ), rate, thresh, norm );
 		}
 	}
 	return ofImage( convert( im ) );
