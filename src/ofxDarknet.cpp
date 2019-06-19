@@ -323,6 +323,7 @@ std::string ofxDarknet::rnn(int num, std::string seed, float temp )
 	return sampled_text;
 }
 
+/*
 void ofxDarknet::train_rnn( std::string textfile, std::string cfgfile )
 {
 	srand( time( 0 ) );
@@ -398,6 +399,7 @@ void ofxDarknet::train_rnn( std::string textfile, std::string cfgfile )
 	sprintf( buff, "%s_final.weights", base );
 	save_weights( net, buff );
 }
+*/
 
 image ofxDarknet::convert( ofPixels & pix )
 {

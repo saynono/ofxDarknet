@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 cmake_policy( SET CMP0042 NEW)
-project( darknet C CXX )
+PROJECT( darknet C CXX )
 
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
@@ -55,7 +55,7 @@ if (CUDA_FOUND)
     
     CUDA_INCLUDE_DIRECTORIES( ${SRC_DIR} )
 
-    set(CUDA_ARCH_BIN "20 30 32 35 37 50 52" CACHE STRING "Specify 'real' GPU arch to build binaries for, BIN(PTX) format is supported. Example: 1.3 2.1(1.3) or 13 21(13)")
+    set(CUDA_ARCH_BIN "30 32 35 37 50 52" CACHE STRING "Specify 'real' GPU arch to build binaries for, BIN(PTX) format is supported. Example: 1.3 2.1(1.3) or 13 21(13)")
     set(CUDA_ARCH_PTX "" CACHE STRING "Specify 'virtual' PTX arch to build PTX intermediate code for. Example: 1.0 1.2 or 10 12")
 
     include(CudaComputeTargetFlags.cmake)
@@ -71,8 +71,8 @@ endif()
 
 
 # -------- LIBRARY CREATION ---------
-# set( LIB_TYPE "SHARED" )
-set( LIB_TYPE "STATIC" )
+set( LIB_TYPE "SHARED" )
+# set( LIB_TYPE "STATIC" )
 
 
 
@@ -97,6 +97,7 @@ set_target_properties(  ${LIB_NAME}
         PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY    ${LIB_PATH}
         ARCHIVE_OUTPUT_DIRECTORY    ${LIB_PATH}
+        LINKER_LANGUAGE CXX
         )
 
 # -------- EXECUTABLE CREATION (NOT OPENFRAMEWORKS) ---------

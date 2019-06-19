@@ -82,7 +82,7 @@ public:
 
     ofImage nightmare( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh );
     std::string rnn( int num, std::string seed, float temp );
-	void train_rnn( std::string textfile, std::string cfgfile );
+	// void train_rnn( std::string textfile, std::string cfgfile );
     
     network & getNetwork() {return net;}
     vector<string> getLayerNames() {return layerNames;}
