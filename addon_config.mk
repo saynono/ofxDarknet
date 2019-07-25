@@ -81,7 +81,7 @@ vs:
 	ADDON_INCLUDES += libs/3rdparty/include
 
 linux64:
-	ADDON_LIBS += libs/darknet/lib/linux64/libdarknetLinux.so
+# 	ADDON_LIBS += libs/darknet/lib/linux64/libdarknet.so
 	ADDON_INCLUDES += /usr/local/cuda/include
 	ADDON_SOURCES_EXCLUDE = libs/3rdparty/include/pthread.h
 	ADDON_SOURCES_EXCLUDE += libs/3rdparty/include/sched.h

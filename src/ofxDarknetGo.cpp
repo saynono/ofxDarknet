@@ -26,7 +26,7 @@ void ofxDarknetGo::setNumRecommendations(int n) {
 image ofxDarknetGo::make_empty_image(int w, int h, int c)
 {
     image out;
-    out.data1 = 0;
+    out.data = 0;
     out.h = h;
     out.w = w;
     out.c = c;
@@ -43,11 +43,11 @@ void ofxDarknetGo::rotate_image_cw(image im, int times)
         for(c = 0; c < im.c; ++c){
             for(x = 0; x < n/2; ++x){
                 for(y = 0; y < (n-1)/2 + 1; ++y){
-                    float temp = im.data1[y + im.w*(x + im.h*c)];
-                    im.data1[y + im.w*(x + im.h*c)] = im.data1[n-1-x + im.w*(y + im.h*c)];
-                    im.data1[n-1-x + im.w*(y + im.h*c)] = im.data1[n-1-y + im.w*(n-1-x + im.h*c)];
-                    im.data1[n-1-y + im.w*(n-1-x + im.h*c)] = im.data1[x + im.w*(n-1-y + im.h*c)];
-                    im.data1[x + im.w*(n-1-y + im.h*c)] = temp;
+                    float temp = im.data[y + im.w*(x + im.h*c)];
+                    im.data[y + im.w*(x + im.h*c)] = im.data[n-1-x + im.w*(y + im.h*c)];
+                    im.data[n-1-x + im.w*(y + im.h*c)] = im.data[n-1-y + im.w*(n-1-x + im.h*c)];
+                    im.data[n-1-y + im.w*(n-1-x + im.h*c)] = im.data[x + im.w*(n-1-y + im.h*c)];
+                    im.data[x + im.w*(n-1-y + im.h*c)] = temp;
                 }
             }
         }
@@ -57,7 +57,7 @@ void ofxDarknetGo::rotate_image_cw(image im, int times)
 image ofxDarknetGo::float_to_image(int w, int h, int c, float *data)
 {
     image out = make_empty_image(w,h,c);
-    out.data1 = data;
+    out.data = data;
     return out;
 }
 
@@ -69,9 +69,9 @@ void ofxDarknetGo::flip_image(image a)
             for(j = 0; j < a.w/2; ++j){
                 int index = j + a.w*(i + a.h*(k));
                 int flip = (a.w - j - 1) + a.w*(i + a.h*(k));
-                float swap = a.data1[flip];
-                a.data1[flip] = a.data1[index];
-                a.data1[index] = swap;
+                float swap = a.data[flip];
+                a.data[flip] = a.data[index];
+                a.data[index] = swap;
             }
         }
     }

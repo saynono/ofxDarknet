@@ -85,7 +85,7 @@ public:
 	// void train_rnn( std::string textfile, std::string cfgfile );
     
     network & getNetwork() {return net;}
-    vector<string> getLayerNames() {return layerNames;}
+    // vector<string> getLayerNames() {return layerNames;}
 
 protected:
     image convert( ofPixels & pix );
@@ -93,7 +93,7 @@ protected:
     
 	// list1 *options1;
 	char **names;
-    vector<string> layerNames;
+    // vector<string> layerNames;
 	network net;
     bool loaded;
     bool labelsAvailable;

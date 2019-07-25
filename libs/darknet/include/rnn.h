@@ -1,6 +1,6 @@
 #ifndef RNN_H
 #define RNN_H
-
+ 
 typedef struct {
 	float *x;
 	float *y;

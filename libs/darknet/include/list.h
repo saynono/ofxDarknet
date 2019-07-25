@@ -7,20 +7,27 @@ typedef struct node{
     struct node *prev;
 } node;
 
-typedef struct list1{
+typedef struct listDN{
     int size;
     node *front;
     node *back;
-} list1;
+} listDN;
 
-list1 *make_list();
-int list_find( list1 *l, void *val);
+#ifdef __cplusplus
+extern "C" {
+#endif
+listDN *make_list();
+int list_find(listDN *l, void *val);
 
-void list_insert( list1 *, void *);
+void list_insert(listDN *, void *);
 
-void **list_to_array( list1 *l);
+void **list_to_array(listDN *l);
 
-void free_list( list1 *l);
-void free_list_contents( list1 *l);
+void free_list(listDN *l);
+void free_list_contents(listDN *l);
+void free_list_contents_kvp(listDN *l);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

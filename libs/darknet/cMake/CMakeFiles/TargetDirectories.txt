@@ -1,3 +1,0 @@
-/home/nono/Documents/workspaces/openframeworks/of_v0.10.1_linux64gcc5_release/addons/ofxDarknet/libs/darknet/cMake/CMakeFiles/rebuild_cache.dir
-/home/nono/Documents/workspaces/openframeworks/of_v0.10.1_linux64gcc5_release/addons/ofxDarknet/libs/darknet/cMake/CMakeFiles/darknetLinux.dir
-/home/nono/Documents/workspaces/openframeworks/of_v0.10.1_linux64gcc5_release/addons/ofxDarknet/libs/darknet/cMake/CMakeFiles/edit_cache.dir

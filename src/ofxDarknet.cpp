@@ -4,7 +4,7 @@ ofxDarknet::ofxDarknet()
 {
     loaded = false;
     labelsAvailable = false;
-}
+} 
 
 ofxDarknet::~ofxDarknet()
 {
@@ -15,14 +15,22 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
     if (nameslist != "") {
         labelsAvailable = true;
     }
-	net = parse_network_cfg( cfgfile.c_str() );
+    ofLogVerbose("ofxDarknet::init") << "Starting...";
+    ofLogVerbose("ofxDarknet::init") << cfgfile.c_str();
+	net = parse_network_cfg( const_cast<char*>(cfgfile.c_str()) );
     
-	load_weights( &net, weightfile.c_str() );
+    ofLogVerbose("ofxDarknet::init") << "parse_network_cfg done.";
+
+	load_weights( &net, const_cast<char*>(weightfile.c_str()) );
+    ofLogVerbose("ofxDarknet::init") << "load_weights done.";
+
 	set_batch_network( &net, 1 );
+    ofLogVerbose("ofxDarknet::init") << "set_batch_network done.";
     if (!nameslist.empty()){
         names = get_labels( (char *) nameslist.c_str() );
     }
     
+    ofLogVerbose("ofxDarknet::init") << "Loading layers...";
     // load layer names
     int numLayerTypes = 24;
     int * counts = new int[ numLayerTypes ];
@@ -54,11 +62,13 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
         else if (type == REGION) layerName = "Region";
         else if (type == REORG) layerName = "Reorg";
         else if (type == BLANK) layerName = "Blank";
-        layerNames.push_back(layerName+" "+ofToString(counts[type]));
-        counts[type] += 1;
+    ofLogVerbose("ofxDarknet::Layer") << "Layer: " << type << "   " << layerName;
+        // layerNames.push_back(layerName+" "+ofToString(counts[min((int)type,numLayerTypes)]));
+        // counts[type] += 1;
     }
 	delete counts;
     loaded = true;
+    ofLogVerbose("ofxDarknet::init") << "All done.";
 }
 
 float * ofxDarknet::get_network_output_layer_gpu( const network& net, int i)
@@ -86,9 +96,10 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 	float **probs = ( float** ) calloc( l.w*l.h*l.n, sizeof( float * ) );
 	for( int j = 0; j < l.w*l.h*l.n; ++j ) probs[ j ] = ( float* ) calloc( l.classes, sizeof( float * ) );
 
-	network_predict( net, im.data1 );
+	network_predict( net, im.data );
 	get_region_boxes( l, 1, 1, threshold, probs, boxes, 0, 0 );
-	do_nms_sort( boxes, probs, l.w*l.h*l.n, l.classes, 0.4 );
+	// do_nms_sort( boxes, probs, l.w*l.h*l.n, l.classes, 0.4 );
+	do_nms_sort_v2( boxes, probs, l.w*l.h*l.n, l.classes, 0.4 );
 	free_image( im );
 
     std::vector< detected_object > detections;
@@ -202,7 +213,7 @@ std::vector< classification > ofxDarknet::classify( ofPixels & pix, int count )
 
 	image im = convert( pix2 );
 
-	float *predictions = network_predict( net, im.data1 );
+	float *predictions = network_predict( net, im.data );
 
 	top_k( predictions, net.outputs, count, indexes );
 	std::vector< classification > classifications;
@@ -414,7 +425,7 @@ image ofxDarknet::convert( ofPixels & pix )
 	for( k = 0; k < c; ++k ) {
 		for( i = 0; i < h; ++i ) {
 			for( j = 0; j < w; ++j ) {
-				im.data1[ count++ ] = data[ i*step + j*c + k ] / 255.;
+				im.data[ count++ ] = data[ i*step + j*c + k ] / 255.;
 			}
 		}
 	}
@@ -428,7 +439,7 @@ ofPixels ofxDarknet::convert( image & im )
 	int i, k;
 	for( k = 0; k < im.c; ++k ) {
 		for( i = 0; i < im.w*im.h; ++i ) {
-			data[ i*im.c + k ] = ( unsigned char ) ( 255 * im.data1[ i + k*im.w*im.h ] );
+			data[ i*im.c + k ] = ( unsigned char ) ( 255 * im.data[ i + k*im.w*im.h ] );
 		}
 	}
 
