@@ -2,20 +2,39 @@
 
 void ofApp::setup() 
 {
-	std::string cfgfile = ofToDataPath( "cfg/yolo9000.cfg" );
-	std::string weightfile = ofToDataPath( "yolo9000.weights" );
-	std::string namesfile = ofToDataPath( "cfg/9k.names" );
-    
-	darknet.init( cfgfile, weightfile, namesfile );
+	// std::string cfgfile = ofToDataPath( "cfg/yolo9000.cfg" );
+	// std::string weightfile = ofToDataPath( "yolo9000.weights" );
+	// std::string nameslist = ofToDataPath( "cfg/9k.names" );
 
+	// std::string cfgfile = ofToDataPath( "cfg/yolo.cfg" );
+	// std::string weightfile = ofToDataPath( "yolo.weights" );
+	// std::string nameslist = ofToDataPath( "cfg/names.list" );
+
+	std::string cfgfile = ofToDataPath( "cfg/yolo-voc.cfg" );
+	std::string weightfile = ofToDataPath( "yolo-voc.weights" );
+	std::string nameslist = ofToDataPath( "cfg/voc.names" );	
+
+	darknet.init( cfgfile, weightfile, nameslist );
+
+#ifdef USE_WEBCAM
 	video.setDeviceID( 0 );
 	video.setDesiredFrameRate( 30 );
 	video.initGrabber( 640, 480 );
+#else
+	player.load("/home/nono/Downloads/scrutton_st.mp4");
+	player.setLoopState(OF_LOOP_NORMAL);
+	player.play();
+#endif
+
 }
 
 void ofApp::update()
 {
+#ifdef USE_WEBCAM
 	video.update();
+#else
+	player.update();
+#endif
 }
 
 void ofApp::draw()
@@ -28,10 +47,24 @@ void ofApp::draw()
     float maxOverlap = 0.25;
     
 	ofSetColor( 255 );
+	bool isNewFrame = false;
+	ofPixels pix;
+#ifdef USE_WEBCAM
 	video.draw( 0, 0 );
+	if(video.isFrameNew()){
+		isNewFrame = true;
+		pix = video.getPixels();
+	}
+#else
+	player.draw( 0, 0 );
+	// if(player.isFrameNew()){
+		isNewFrame = true;
+		pix = player.getPixels();
+	// }
+#endif
 
-	if( video.isFrameNew() ) {
-		std::vector< detected_object > detections = darknet.yolo( video.getPixels(), thresh, maxOverlap );
+	if( isNewFrame ) {
+		std::vector< detected_object > detections = darknet.yolo( pix, thresh, maxOverlap );
 
 		ofNoFill();	
 		for( detected_object d : detections )

@@ -36,6 +36,9 @@
 #include "utils.h"
 #include "rnn.h"
 
+#include "yolo_v2_class.hpp"    // imported functions from DLL
+
+
 #include "ofxOpenCv.h"
 
 #ifdef OPENCV
@@ -66,28 +69,43 @@ struct activations {
 };
 
 
-class ofxDarknet
+// #define C_SHARP_MAX_OBJECTS 1000
+
+// struct bbox_t {
+//     unsigned int x, y, w, h;       // (x,y) - top-left corner, (w, h) - width & height of bounded box
+//     float prob;                    // confidence - probability that the object was found correctly
+//     unsigned int obj_id;           // class of object - from range [0, classes-1]
+//     unsigned int track_id;         // tracking id for video (0 - untracked, 1 - inf - tracked object)
+//     unsigned int frames_counter;   // counter of frames on which the object was detected
+//     float x_3d, y_3d, z_3d;        // center of object (in Meters) if ZED 3D Camera is used
+// };
+
+// struct image_t {
+//     int h;                        // height
+//     int w;                        // width
+//     int c;                        // number of chanels (3 - for RGB)
+//     float *data;                  // pointer to the image data
+// };
+
+// struct bbox_t_container {
+//     bbox_t candidates[C_SHARP_MAX_OBJECTS];
+// };
+
+
+class ofxDarknet: public ofThread
 {
 public:
 	ofxDarknet();
 	~ofxDarknet();
 
 	void init( std::string cfgfile, std::string weightfile, std::string nameslist = "");
-    bool isLoaded() {return loaded;}
+    bool isLoaded() {return loaded;}    
+    void yolo_nono( ofPixels & pix, float threshold = 0.24f, float maxOverlap = 0.5f );
     
-    std::vector< classification > classify( ofPixels & pix, int count = 5 );
-    std::vector< detected_object > yolo( ofPixels & pix, float threshold = 0.24f, float maxOverlap = 0.5f );
-    std::vector< activations > getFeatureMaps(int idxLayer);
-    float * get_network_output_layer_gpu( const network& net, int i);
-
-    ofImage nightmare( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh );
-    std::string rnn( int num, std::string seed, float temp );
-	// void train_rnn( std::string textfile, std::string cfgfile );
-    
-    network & getNetwork() {return net;}
-    // vector<string> getLayerNames() {return layerNames;}
+    void threadedFunction();
 
 protected:
+    void update(ofEventArgs & a);
     image convert( ofPixels & pix );
     ofPixels convert( image & image );
     
@@ -97,6 +115,14 @@ protected:
 	network net;
     bool loaded;
     bool labelsAvailable;
+
+    std::shared_ptr<Detector> detector;
+    std::vector<std::string> obj_names;
+
+    std::vector<std::string> objectsNamesFromFile(std::string const filename);
+    ofThreadChannel<ofPixels> toAnalyze;
+    ofThreadChannel<detected_object> analyzed;
+
 };
 
 

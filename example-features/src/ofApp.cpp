@@ -18,7 +18,7 @@ void ofApp::setup()
         setSourceWebcam();
 	}
 	else {
-		setSourceImage( "kitty.jpg" );
+		setSourceImage( "Bald_Eagle_Stock_by_Crystalsm.jpg" );
 	}
 }
 
