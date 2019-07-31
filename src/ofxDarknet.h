@@ -47,25 +47,15 @@
 
 
 struct detected_object {
+    unsigned int id;
 	ofRectangle rect;
 	std::string label;
 	float probability;
-    vector<float> features;
-	ofColor color;
 };
 
-struct classification {
-	std::string label;
-	float probability;
-};
-
-struct activations {
-    std::vector<float> acts;
-    int rows;
-    int cols;
-    float min;
-    float max;
-    void getImage(ofImage & img);
+struct detected_objects {
+    ofPixels pix;
+    std::vector<detected_object> objects;
 };
 
 
@@ -101,29 +91,35 @@ public:
 	void init( std::string cfgfile, std::string weightfile, std::string nameslist = "");
     bool isLoaded() {return loaded;}    
     void yolo_nono( ofPixels & pix, float threshold = 0.24f, float maxOverlap = 0.5f );
+
+    detected_objects getDetectedObjects();
+
     
     void threadedFunction();
 
 protected:
     void update(ofEventArgs & a);
-    image convert( ofPixels & pix );
+    // std::shared_ptr<image_t> convert( ofPixels & pix, std::shared_ptr<image_t> image_ptr );
+    void convert( ofPixels & pix, image_t* image );
     ofPixels convert( image & image );
     
 	// list1 *options1;
 	char **names;
     // vector<string> layerNames;
-	network net;
+	// network net;
     bool loaded;
     bool labelsAvailable;
+    bool bDetectionIsBusy = false;
 
     std::shared_ptr<Detector> detector;
     std::vector<std::string> obj_names;
 
+
+
     std::vector<std::string> objectsNamesFromFile(std::string const filename);
     ofThreadChannel<ofPixels> toAnalyze;
-    ofThreadChannel<detected_object> analyzed;
+    ofThreadChannel<detected_objects> analyzed;
+    detected_objects detectedObjects;
+
 
 };
-
-
-#include "ofxDarknetGo.h"
