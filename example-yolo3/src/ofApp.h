@@ -13,7 +13,7 @@ public:
 	void update();
 	void draw();
 
-	ofxDarknet darknet;
+	ofxDarknet yolo;
 #ifdef USE_WEBCAM
 	ofVideoGrabber video;
 #else
@@ -21,4 +21,6 @@ public:
 #endif
 
 	uint currentFrame = 0;
+    float scale = .5;
+
 };

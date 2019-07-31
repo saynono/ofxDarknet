@@ -64,12 +64,14 @@ file(GLOB OFX_OPENCV
         "${ADDON_DIRECTORY}/ofxOpenCv/src/ofxCvHaarFinder.cpp"
         "${ADDON_DIRECTORY}/ofxOpenCv/src/ofxCvImage.cpp"
         "${ADDON_DIRECTORY}/ofxOpenCv/src/ofxCvShortImage.cpp"
+        "${ADDON_DIRECTORY}/ofxOpenCv/src/ofxCv"
         )
 
 set(HEADER_OFX_OPENCV
         "${ADDON_DIRECTORY}/ofxOpenCv/src/"
         "${ADDON_DIRECTORY}/ofxOpenCv/libs/opencv/include"
         "${ADDON_DIRECTORY}/ofxOpenCv/libs/opencv/include/opencv"
+        "${ADDON_DIRECTORY}/ofxOpenCv/libs/opencv/include/opencv2"
         )
 
 find_package( OpenCV REQUIRED )

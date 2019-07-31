@@ -21,18 +21,21 @@ void ofApp::setup()
     std::string  weightfile = "data/yolov3.weights";
 
 
-	darknet.init( cfgfile, weightfile, nameslist );
-
+	yolo.init( cfgfile, weightfile, nameslist );
 #ifdef USE_WEBCAM
 	video.setDeviceID( 0 );
 	video.setDesiredFrameRate( 30 );
 	video.initGrabber( 640, 480 );
-	ofSetWindowShape(video.getWidth(),video.getHeight());
+	ofSetWindowShape(video.getWidth()*scale,video.getHeight()*scale);
 #else
-	player.load("/home/nono/Downloads/scrutton_st.mp4");
+	auto videoFile = "/home/nono/Desktop/videos/test-convert.mp4";
+//    auto videoFile = "/home/nono/Downloads/MVI_9290_short.mp4";
+//    auto videoFile = "/home/nono/Downloads/scrutton_st_02.mp4";
+    player.load(videoFile);
+//    player.setSpeed(.5);
 	player.setLoopState(OF_LOOP_NORMAL);
 	player.play();
-	ofSetWindowShape(player.getWidth(),player.getHeight());
+	ofSetWindowShape(player.getWidth()*scale,player.getHeight()*scale);
 #endif
 
 }
@@ -59,14 +62,14 @@ void ofApp::draw()
 	bool isNewFrame = false;
 	ofPixels pix;
 #ifdef USE_WEBCAM
-	video.draw( 0, 0 );
+	video.draw( 0, 0 , ofGetWidth(), ofGetHeight());
 	if(video.isFrameNew()){
 		isNewFrame = true;
 		pix = video.getPixels();
 		currentFrame++;
 	}
 #else
-	player.draw( 0, 0 );
+	player.draw( 0, 0 , ofGetWidth(), ofGetHeight());
 	if(currentFrame!=player.getCurrentFrame()){
         currentFrame=player.getCurrentFrame();
         isNewFrame = true;
@@ -76,33 +79,39 @@ void ofApp::draw()
 	#endif
 
 	if( isNewFrame ) {
-        darknet.yolo_nono(pix, thresh, maxOverlap);
+        yolo.yolo_nono(pix, thresh, maxOverlap);
     }
     {
-		// auto pixRes = darknet.yolo_nono( pix, thresh, maxOverlap );
-		// ofImage img(pixRes);
-		// img.draw(0,0,pixRes.getWidth(),pixRes.getHeight());
-		// ofLog() << pixRes.getWidth() << "   " << pixRes.getHeight();
-
-		std::vector< detected_object > detections = darknet.getDetectedObjects().objects;// = darknet.yolo_nono( pix, thresh, maxOverlap );
-		ofNoFill();	
-		for( detected_object d : detections )
+        float scale = .5;
+		std::map< unsigned int, DetectedObject > detections = yolo.getDetectedObjects().objects;// = darknet.yolo_nono( pix, thresh, maxOverlap );
+		ofNoFill();
+		ofPushMatrix();
+		ofScale(scale,scale,1);
+		for( const auto pair : detections )
 		{
-			ofSetColor( ofColor::azure );
+		    const auto d = pair.second;
 			ofNoFill();
-			ofDrawRectangle( d.rect );
+            ofSetColor( ofColor::bisque );
+            ofDrawRectangle( d.rectPredicted );
+            ofSetColor( ofColor::azure );
+            ofDrawRectangle( d.rect );
 			ofDrawBitmapStringHighlight( ofToString(d.id) + "    " + d.label + ": " + ofToString(d.probability,3), d.rect.x+3, d.rect.y + 18 );
             glLineWidth( 6 );
-			ofDrawLine(d.rect.getBottomLeft(), glm::vec2(d.rect.x+d.rect.getWidth()*d.probability,d.rect.getBottom()));
+			ofDrawLine(glm::vec2(d.rect.x,d.rect.getBottom()-3), glm::vec2(d.rect.x+d.rect.getWidth()*d.probability,d.rect.getBottom()-3));
             glLineWidth( 1 );
 
             // optionally, you can grab the 1024-length feature vector associated
             // with each detected object
 //            vector<float> & features = d.features;
 		}
+		ofPopMatrix();
 
-		ofDrawBitmapStringHighlight("Detections: " + ofToString(detections.size()), 20, 30 );
-		ofDrawBitmapStringHighlight("Threshold: " + ofToString(thresh,2), 20, 50 );
+		if(yolo.isLoaded()){
+            ofDrawBitmapStringHighlight("Detections: " + ofToString(detections.size()), 20, 30 );
+            ofDrawBitmapStringHighlight("Threshold: " + ofToString(thresh,2), 20, 50 );
+        }else{
+            ofDrawBitmapStringHighlight("Loading Yolo...", 20, 30 );
+        }
 
 	}
 }
