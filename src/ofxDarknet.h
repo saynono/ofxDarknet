@@ -47,29 +47,45 @@ public:
 
     DetectedObjects getDetectedObjects();
 
-    
-    void threadedFunction();
+    int getTrackingMaxDist(){ return trackingMaxDist;};
+    void setTrackingMaxDist(int trackingMaxDist){ this->trackingMaxDist = trackingMaxDist;};
+
+    int getTrackingFrameHistory(){ return trackingFrameHistory;};
+    void setTrackingFrameHistory(int trackingFrameHistory){ this->trackingFrameHistory = trackingFrameHistory;};
+
+    bool isTrackingChangeHistory(){ return trackingChangeHistory;};
+    void setTrackingChangeHistory(bool trackingChangeHistory){ this->trackingChangeHistory = trackingChangeHistory;};
+
+    uint64_t getTrackingMSUntilRemove(){ return trackingMSUntilRemove;};
+    void setTrackingMSUntilRemove(uint64_t trackingMSUntilRemove){ this->trackingMSUntilRemove = trackingMSUntilRemove;};
 
 protected:
+
+    void threadedFunction();
     void update(ofEventArgs & a);
-    // std::shared_ptr<image_t> convert( ofPixels & pix, std::shared_ptr<image_t> image_ptr );
     void convert( ofPixels & pix, image_t* image );
     ofPixels convert( image_t & image );
     
 	// list1 *options1;
-	char **names;
-    // vector<string> layerNames;
-	// network net;
+//	char **names;
+
     string cfgfile;
     string weightfile;
     string nameslist;
 
-    bool loaded;
-    bool labelsAvailable;
+    bool loaded = false;
+    bool labelsAvailable = false;
     bool bDetectionIsBusy = false;
+
+    int trackingMaxDist = 200;
+    int trackingFrameHistory = 10;
+    bool trackingChangeHistory = true;
+    uint64_t trackingMSUntilRemove = 500;
 
     std::shared_ptr<Detector> detector;
     std::vector<std::string> obj_names;
+
+
     track_kalman_t trackKalman;
 
 
@@ -79,17 +95,10 @@ protected:
         float maxOverlap;
         std::vector<bbox_t> result_vec;
     };
-
-
     std::vector<std::string> objectsNamesFromFile(std::string const filename);
     ofThreadChannel<AnalyseObject> toAnalyze;
     ofThreadChannel<AnalyseObject> analyzed;
+
     DetectedObjects detectedObjects;
-
-    int trackingMaxDist = 200;
-    int trackingFrameHistory = 10;
-    bool trackingChangeHistory = true;
-
-    uint64_t milliSecsUntilRemove = 500;
 
 };

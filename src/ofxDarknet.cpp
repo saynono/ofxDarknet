@@ -26,7 +26,6 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
     ofLogVerbose("ofxDarknet::init") << "All done.";
 }
 
-
 void ofxDarknet::update(ofEventArgs & a){
     AnalyseObject ao;
     auto timestamp = ofGetElapsedTimeMillis();
@@ -54,7 +53,7 @@ void ofxDarknet::update(ofEventArgs & a){
         }
         std::vector<unsigned int> idsToRemove;
         for(const auto obj: detectedObjects.objects) {
-            if(timestamp-obj.second.lastDetected>milliSecsUntilRemove){
+            if(timestamp-obj.second.lastDetected>trackingMSUntilRemove){
                 idsToRemove.push_back(obj.first);
             }
         }

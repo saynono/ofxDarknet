@@ -1,2 +1,3 @@
 ofxDarknet
 ofxOpenCv
+ofxCv

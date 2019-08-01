@@ -29,6 +29,7 @@ void ofApp::setup()
 	ofSetWindowShape(video.getWidth()*scale,video.getHeight()*scale);
 #else
 	auto videoFile = "/home/nono/Desktop/videos/test-convert.mp4";
+//    auto videoFile = "/home/nono/Desktop/videos/1-nicole-jaywalk-then-cross-back.avi";
 //    auto videoFile = "/home/nono/Downloads/MVI_9290_short.mp4";
 //    auto videoFile = "/home/nono/Downloads/scrutton_st_02.mp4";
     player.load(videoFile);
@@ -79,7 +80,7 @@ void ofApp::draw()
 	#endif
 
 	if( isNewFrame ) {
-        yolo.yolo_nono(pix, thresh, maxOverlap);
+        yolo.yolo_nono(pix, thresh);
     }
     {
         float scale = .5;
