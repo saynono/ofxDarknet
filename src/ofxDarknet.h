@@ -80,7 +80,7 @@ protected:
     bool bHasNewData = false;
 
     int trackingMaxDist = 200;
-    int trackingFrameHistory = 10;
+    int trackingFrameHistory = 40;
     bool trackingChangeHistory = true;
     uint64_t trackingMSUntilRemove = 500;
     uint skippedFrameCounter = 0;

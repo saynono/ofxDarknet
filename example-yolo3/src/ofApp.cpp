@@ -28,15 +28,16 @@ void ofApp::setup()
 	video.initGrabber( 640, 480 );
 	ofSetWindowShape(video.getWidth()*scale,video.getHeight()*scale);
 #else
-//	auto videoFile = "/home/nono/Desktop/videos/test-convert.mp4";
+	auto videoFile = "/home/nono/Desktop/videos/test-convert.mp4";
 //    auto videoFile = "/home/um/Desktop/videos/test-convert.mp4";
-    auto videoFile = "/home/nono/Documents/workspaces/openframeworks/of_v0.10.1_linux64gcc5_release/apps/umbrellium/colas-crossing-cv/bin/data/videos/MVI_9284_short.mp4";
+//    auto videoFile = "/home/nono/Documents/workspaces/openframeworks/of_v0.10.1_linux64gcc5_release/apps/umbrellium/colas-crossing-cv/bin/data/videos/MVI_9284_short.mp4";
 //    auto videoFile = "/home/nono/Desktop/videos/1-nicole-jaywalk-then-cross-back.avi";
 //    auto videoFile = "/home/nono/Downloads/MVI_9290_short.mp4";
 //    auto videoFile = "/home/nono/Downloads/scrutton_st_02.mp4";
     player.load(videoFile);
 //    player.setSpeed(.5);
-	player.setLoopState(OF_LOOP_NORMAL);
+//	player.setLoopState(OF_LOOP_NORMAL);
+    player.setLoopState(OF_LOOP_NONE);
 	player.play();
 	ofSetWindowShape(player.getWidth()*scale,player.getHeight()*scale);
 #endif
@@ -55,8 +56,8 @@ void ofApp::update()
 void ofApp::draw()
 {
     // detected objects with confidence < threshold are omitted
-	float thresh = ofMap( ofGetMouseX(), 0, ofGetWidth(), 0, 1 );
-
+//	float thresh = ofMap( ofGetMouseX(), 0, ofGetWidth(), 0, 1 );
+    float thresh = 0.29;
     // if a detected object overlaps >maxOverlap with another detected
     // object with a higher confidence, it gets omitted
     float maxOverlap = 0.25;

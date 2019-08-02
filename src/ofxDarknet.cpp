@@ -25,14 +25,31 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
     startThread();
     ofLogVerbose("ofxDarknet::init") << "All done.";
 }
-
+//int tempCounter = 0;
 void ofxDarknet::update(ofEventArgs & a){
     AnalyseObject ao;
     auto timestamp = ofGetElapsedTimeMillis();
 	if(analyzed.tryReceive(ao)) {
         trackKalman.correct(ao.result_vec);
         for(auto res: ao.result_vec){
+
             auto rect = ofRectangle(res.x,res.y,res.w,res.h);
+
+            // Don't create new objects on top of old ones... most likely an error
+            bool discardObject = false;
+            if(detectedObjects.objects.count(res.track_id) == 0){
+                for(auto objComp: detectedObjects.objects){
+                    auto overlapRect = rect.getIntersection(objComp.second.rect);
+                    float overlap = (overlapRect.getWidth()*overlapRect.getHeight()) / (objComp.second.rect.getWidth()*objComp.second.rect.getHeight());
+                    if(ao.maxOverlap < overlap && res.track_id != objComp.second.id ){
+//                        if(overlap>0) ofLog() << "Discard # " << res.track_id << " because of existing # " << objComp.second.id << " overlap : " << overlap;
+                        discardObject = true;
+                        break;
+                    }
+                }
+            }
+            if(discardObject) continue;
+
             DetectedObject dectObj;
             if(labelsAvailable){
                 dectObj.label = obj_names[res.obj_id];
@@ -43,9 +60,12 @@ void ofxDarknet::update(ofEventArgs & a){
             dectObj.probability = res.prob;
             dectObj.id = res.track_id;
             dectObj.lastDetected = timestamp;
+//            if(detectedObjects.objects.count(res.track_id) == 0){
+//                tempCounter ++;
+////                ofLog() << "Creating new Object #" << res.track_id << "     tempCounter: " << tempCounter;
+//            }
             detectedObjects.objects[res.track_id] = (dectObj);
         }
-        if(bHasNewData) ofLogVerbose(__FUNCTION__) << "bHasNewData : " << bHasNewData << "      " << ofGetElapsedTimef();
         bHasNewData = true;
     }else {
         auto result_vec = trackKalman.predict();
