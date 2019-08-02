@@ -30,20 +30,23 @@ void ofxDarknet::update(ofEventArgs & a){
     AnalyseObject ao;
     auto timestamp = ofGetElapsedTimeMillis();
 	if(analyzed.tryReceive(ao)) {
+        trackKalman.correct(ao.result_vec);
         for(auto res: ao.result_vec){
+            auto rect = ofRectangle(res.x,res.y,res.w,res.h);
             DetectedObject dectObj;
             if(labelsAvailable){
                 dectObj.label = obj_names[res.obj_id];
             }else{
                 dectObj.label = "N/A";
             }
-            dectObj.rectPredicted = dectObj.rect = ofRectangle(res.x,res.y,res.w,res.h);
+            dectObj.rectPredicted = dectObj.rect = rect;
             dectObj.probability = res.prob;
             dectObj.id = res.track_id;
             dectObj.lastDetected = timestamp;
             detectedObjects.objects[res.track_id] = (dectObj);
         }
-        trackKalman.correct(ao.result_vec);
+        if(bHasNewData) ofLogVerbose(__FUNCTION__) << "bHasNewData : " << bHasNewData << "      " << ofGetElapsedTimef();
+        bHasNewData = true;
     }else{
         auto result_vec = trackKalman.predict();
         for(auto res: result_vec){
@@ -74,7 +77,8 @@ void ofxDarknet::yolo_nono( ofPixels & pix, float threshold /*= 0.24f */, float 
         obj.maxOverlap = maxOverlap;
         toAnalyze.send(obj);
     }else{
-        ofLogVerbose("ofxDarknet::yolo_nono") << " >>>>>>>>>>>  Yolo busy.<<<<<<<<<<<";
+        skippedFrameCounter++;
+        ofLogVerbose("ofxDarknet::yolo_nono") << "Yolo busy. Skipping frame. [" << skippedFrameCounter<<"]";
     }
 }
 
@@ -176,6 +180,11 @@ void ofxDarknet::threadedFunction(){
 	}
 }
 
+bool ofxDarknet::hasNewData() {
+    bool ret = bHasNewData;
+    bHasNewData = false;
+    return ret;
+}
 
 DetectedObjects ofxDarknet::getDetectedObjects(){
     return detectedObjects;

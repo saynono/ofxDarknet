@@ -42,7 +42,8 @@ public:
 	~ofxDarknet();
 
 	void init( std::string cfgfile, std::string weightfile, std::string nameslist = "");
-    bool isLoaded() {return loaded;}    
+    bool isLoaded() {return loaded;};
+    bool hasNewData();
     void yolo_nono( ofPixels & pix, float threshold = 0.24f, float maxOverlap = 0.5f );
 
     DetectedObjects getDetectedObjects();
@@ -76,11 +77,13 @@ protected:
     bool loaded = false;
     bool labelsAvailable = false;
     bool bDetectionIsBusy = false;
+    bool bHasNewData = false;
 
     int trackingMaxDist = 200;
     int trackingFrameHistory = 10;
     bool trackingChangeHistory = true;
     uint64_t trackingMSUntilRemove = 500;
+    uint skippedFrameCounter = 0;
 
     std::shared_ptr<Detector> detector;
     std::vector<std::string> obj_names;

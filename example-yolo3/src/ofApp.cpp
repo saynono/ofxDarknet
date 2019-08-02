@@ -28,7 +28,9 @@ void ofApp::setup()
 	video.initGrabber( 640, 480 );
 	ofSetWindowShape(video.getWidth()*scale,video.getHeight()*scale);
 #else
-	auto videoFile = "/home/nono/Desktop/videos/test-convert.mp4";
+//	auto videoFile = "/home/nono/Desktop/videos/test-convert.mp4";
+//    auto videoFile = "/home/um/Desktop/videos/test-convert.mp4";
+    auto videoFile = "/home/nono/Documents/workspaces/openframeworks/of_v0.10.1_linux64gcc5_release/apps/umbrellium/colas-crossing-cv/bin/data/videos/MVI_9284_short.mp4";
 //    auto videoFile = "/home/nono/Desktop/videos/1-nicole-jaywalk-then-cross-back.avi";
 //    auto videoFile = "/home/nono/Downloads/MVI_9290_short.mp4";
 //    auto videoFile = "/home/nono/Downloads/scrutton_st_02.mp4";
