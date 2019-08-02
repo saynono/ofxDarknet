@@ -47,23 +47,23 @@ void ofxDarknet::update(ofEventArgs & a){
         }
         if(bHasNewData) ofLogVerbose(__FUNCTION__) << "bHasNewData : " << bHasNewData << "      " << ofGetElapsedTimef();
         bHasNewData = true;
-    }else{
+    }else {
         auto result_vec = trackKalman.predict();
         for(auto res: result_vec){
             if(detectedObjects.objects.count(res.track_id)){
                 detectedObjects.objects[res.track_id].rectPredicted = ofRectangle(res.x,res.y,res.w,res.h);
             }
         }
-        std::vector<unsigned int> idsToRemove;
-        for(const auto obj: detectedObjects.objects) {
-            if(timestamp-obj.second.lastDetected>trackingMSUntilRemove){
-                idsToRemove.push_back(obj.first);
-            }
+    }
+    std::vector<unsigned int> idsToRemove;
+    for(const auto obj: detectedObjects.objects) {
+        if(timestamp-obj.second.lastDetected>trackingMSUntilRemove){
+            idsToRemove.push_back(obj.first);
         }
-        for(auto id: idsToRemove){
-            detectedObjects.objects.erase(id);
-        }
-	}
+    }
+    for(auto id: idsToRemove){
+        detectedObjects.objects.erase(id);
+    }
 }
 
 // std::vector< detected_object > ofxDarknet::yolo_nono( ofPixels & pix, float threshold /*= 0.24f */, float maxOverlap /*= 0.5f */ )
